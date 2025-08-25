@@ -22,6 +22,12 @@ import {
 } from '@/types';
 import { LoadingState as LoadingStates } from '@/types/common';
 import { ElementType } from '@/types/elements';
+import {
+  type ViewportManager,
+  createViewportManager,
+  DEFAULT_VIEWPORT,
+  viewportUtils,
+} from '@/lib/canvas/viewport';
 
 /** Actions available on the diagram store */
 export interface DiagramActions {
@@ -43,10 +49,14 @@ export interface DiagramActions {
   // Viewport operations
   setViewport: (viewport: Partial<Viewport>) => void;
   resetViewport: () => void;
-  zoomIn: (factor?: number) => void;
-  zoomOut: (factor?: number) => void;
-  zoomToFit: () => void;
+  zoomIn: (factor?: number, centerPoint?: Point) => void;
+  zoomOut: (factor?: number, centerPoint?: Point) => void;
+  zoomToFit: (padding?: number) => void;
+  zoomAtPoint: (zoom: number, centerPoint: Point) => void;
   panTo: (position: Point) => void;
+  panBy: (delta: Point) => void;
+  panToWorldPoint: (worldPoint: Point) => void;
+  getViewportManager: () => ViewportManager;
 
   // Undo/Redo operations
   undo: () => void;
@@ -77,15 +87,7 @@ export interface DiagramActions {
 
 export type DiagramStore = DiagramState & DiagramActions;
 
-/** Default viewport configuration */
-const DEFAULT_VIEWPORT: Viewport = {
-  zoom: 1.0,
-  minZoom: 0.1,
-  maxZoom: 5.0,
-  offset: { x: 0, y: 0 },
-  size: { width: 800, height: 600 },
-  visibleArea: { x: 0, y: 0, width: 800, height: 600 },
-};
+/** Default viewport configuration - imported from viewport utils */
 
 /** Default diagram snapshot */
 const DEFAULT_SNAPSHOT: DiagramSnapshot = {
@@ -416,7 +418,15 @@ export const useDiagramStore = create<DiagramStore>()(
           return;
         }
 
+        // Update the viewport with new values
         Object.assign(state.currentDiagram.viewport, viewportChanges);
+
+        // Update visible area if needed
+        if (viewportChanges.zoom || viewportChanges.offset || viewportChanges.size) {
+          state.currentDiagram.viewport.visibleArea = viewportUtils.calculateVisibleArea(
+            state.currentDiagram.viewport
+          );
+        }
 
         const now = Date.now();
         state.currentDiagram.metadata.updatedAt = now;
@@ -429,24 +439,6 @@ export const useDiagramStore = create<DiagramStore>()(
     },
 
     resetViewport: () => {
-      set((state) => {
-        if (!state.currentDiagram) {
-          return;
-        }
-
-        state.currentDiagram.viewport = { ...DEFAULT_VIEWPORT };
-
-        const now = Date.now();
-        state.currentDiagram.metadata.updatedAt = now;
-        state.isDirty = true;
-
-        // Update history present viewport
-        state.history.present.viewport = { ...state.currentDiagram.viewport };
-        state.history.present.timestamp = now;
-      });
-    },
-
-    zoomIn: (factor = 1.2) => {
       const { setViewport } = get();
       const state = get();
 
@@ -454,90 +446,115 @@ export const useDiagramStore = create<DiagramStore>()(
         return;
       }
 
-      const newZoom = Math.min(
-        state.currentDiagram.viewport.maxZoom,
-        state.currentDiagram.viewport.zoom * factor
-      );
+      // Preserve size but reset other properties
+      const currentSize = state.currentDiagram.viewport.size;
+      const resetViewport = viewportUtils.createViewport({ size: currentSize });
 
-      setViewport({ zoom: newZoom });
+      setViewport(resetViewport);
     },
 
-    zoomOut: (factor = 1.2) => {
-      const { setViewport } = get();
+    zoomIn: (factor = 1.2, centerPoint) => {
       const state = get();
-
       if (!state.currentDiagram) {
         return;
       }
 
-      const newZoom = Math.max(
-        state.currentDiagram.viewport.minZoom,
-        state.currentDiagram.viewport.zoom / factor
-      );
-
-      setViewport({ zoom: newZoom });
-    },
-
-    zoomToFit: () => {
-      const state = get();
-      if (!state.currentDiagram || state.currentDiagram.elements.length === 0) {
-        return;
-      }
-
-      // Calculate bounds of all elements
-      let minX = Infinity,
-        minY = Infinity,
-        maxX = -Infinity,
-        maxY = -Infinity;
-
-      state.currentDiagram.elements.forEach((element) => {
-        const { position, size } = element;
-        minX = Math.min(minX, position.x);
-        minY = Math.min(minY, position.y);
-        maxX = Math.max(maxX, position.x + size.width);
-        maxY = Math.max(maxY, position.y + size.height);
-      });
-
-      const elementsBounds = {
-        width: maxX - minX,
-        height: maxY - minY,
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const center = centerPoint || {
+        x: state.currentDiagram.viewport.size.width / 2,
+        y: state.currentDiagram.viewport.size.height / 2,
       };
 
-      const { viewport } = state.currentDiagram;
-      const padding = 50; // Add some padding
-
-      const scaleX = (viewport.size.width - padding * 2) / elementsBounds.width;
-      const scaleY = (viewport.size.height - padding * 2) / elementsBounds.height;
-      const scale = Math.min(scaleX, scaleY, viewport.maxZoom);
-
-      const centerX = minX + elementsBounds.width / 2;
-      const centerY = minY + elementsBounds.height / 2;
-
+      const result = manager.zoomIn(factor, center);
       const { setViewport } = get();
-      setViewport({
-        zoom: Math.max(scale, viewport.minZoom),
-        offset: {
-          x: viewport.size.width / 2 - centerX * scale,
-          y: viewport.size.height / 2 - centerY * scale,
-        },
-      });
+      setViewport({ zoom: result.zoom, offset: result.offset });
+    },
+
+    zoomOut: (factor = 1.2, centerPoint) => {
+      const state = get();
+      if (!state.currentDiagram) {
+        return;
+      }
+
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const center = centerPoint || {
+        x: state.currentDiagram.viewport.size.width / 2,
+        y: state.currentDiagram.viewport.size.height / 2,
+      };
+
+      const result = manager.zoomOut(factor, center);
+      const { setViewport } = get();
+      setViewport({ zoom: result.zoom, offset: result.offset });
+    },
+
+    zoomAtPoint: (zoom, centerPoint) => {
+      const state = get();
+      if (!state.currentDiagram) {
+        return;
+      }
+
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const result = manager.zoomAtPoint(zoom, centerPoint);
+      const { setViewport } = get();
+      setViewport({ zoom: result.zoom, offset: result.offset });
+    },
+
+    zoomToFit: (padding = 50) => {
+      const state = get();
+      if (!state.currentDiagram || state.currentDiagram.elements.length === 0) {
+        const { resetViewport } = get();
+        resetViewport();
+        return;
+      }
+
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const result = manager.zoomToFitElements(state.currentDiagram.elements, padding);
+      const { setViewport } = get();
+      setViewport({ zoom: result.zoom, offset: result.offset });
     },
 
     panTo: (position) => {
-      const { setViewport } = get();
       const state = get();
-
       if (!state.currentDiagram) {
         return;
       }
 
-      const { viewport } = state.currentDiagram;
-      setViewport({
-        offset: {
-          x: viewport.size.width / 2 - position.x * viewport.zoom,
-          y: viewport.size.height / 2 - position.y * viewport.zoom,
-        },
-      });
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const result = manager.panTo(position);
+      const { setViewport } = get();
+      setViewport({ offset: result.offset });
+    },
+
+    panBy: (delta) => {
+      const state = get();
+      if (!state.currentDiagram) {
+        return;
+      }
+
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const result = manager.panBy(delta);
+      const { setViewport } = get();
+      setViewport({ offset: result.offset });
+    },
+
+    panToWorldPoint: (worldPoint) => {
+      const state = get();
+      if (!state.currentDiagram) {
+        return;
+      }
+
+      const manager = createViewportManager(state.currentDiagram.viewport);
+      const result = manager.panToWorldPoint(worldPoint);
+      const { setViewport } = get();
+      setViewport({ offset: result.offset });
+    },
+
+    getViewportManager: () => {
+      const state = get();
+      if (!state.currentDiagram) {
+        return createViewportManager(DEFAULT_VIEWPORT);
+      }
+      return createViewportManager(state.currentDiagram.viewport);
     },
 
     // Undo/Redo operations
