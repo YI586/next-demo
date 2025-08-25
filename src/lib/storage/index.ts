@@ -5,6 +5,9 @@
 // Base storage adapter and utilities
 export { BaseStorageAdapter, StorageUtils } from './storage-adapter';
 
+// Concrete storage adapters
+export { FileStorageAdapter, FileStorageUtils } from './adapters/file-storage-adapter';
+
 // Storage manager for coordinating adapters
 export { StorageManager } from './storage-manager';
 export type { StorageManagerEvents, StorageEventCallback } from './storage-manager';
