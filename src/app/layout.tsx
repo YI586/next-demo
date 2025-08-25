@@ -7,7 +7,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Next Demo - Excalidraw MVP',
-  description: 'A minimal diagramming application for creating, editing, saving, and loading diagrams.',
+  description:
+    'A minimal diagramming application for creating, editing, saving, and loading diagrams.',
   keywords: ['diagram', 'drawing', 'canvas', 'excalidraw', 'next.js'],
   authors: [{ name: 'Next Demo Team' }],
 };
@@ -17,11 +18,7 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>

@@ -21,16 +21,7 @@ export type * from './ui';
 export type * from './storage';
 
 // Re-export commonly used types for convenience
-export type {
-  ID,
-  Point,
-  Rectangle,
-  Size,
-  Color,
-  Timestamp,
-  Tool,
-  LoadingState,
-} from './common';
+export type { ID, Point, Rectangle, Size, Color, Timestamp, Tool, LoadingState } from './common';
 
 export type {
   DiagramElement,
@@ -41,31 +32,10 @@ export type {
   UpdateElementParams,
 } from './elements';
 
-export type {
-  Viewport,
-  CanvasPointerEvent,
-  CanvasKeyboardEvent,
-  InteractionMode,
-} from './canvas';
+export type { Viewport, CanvasPointerEvent, CanvasKeyboardEvent, InteractionMode } from './canvas';
 
-export type {
-  Diagram,
-  DiagramState,
-  DiagramSnapshot,
-  DiagramOperation,
-} from './diagram';
+export type { Diagram, DiagramState, DiagramSnapshot, DiagramOperation } from './diagram';
 
-export type {
-  UIState,
-  DialogType,
-  SidebarTab,
-  Notification,
-  UserPreferences,
-} from './ui';
+export type { UIState, DialogType, SidebarTab, Notification, UserPreferences } from './ui';
 
-export type {
-  StorageAdapter,
-  SaveOptions,
-  LoadOptions,
-  StorageConfig,
-} from './storage';
+export type { StorageAdapter, SaveOptions, LoadOptions, StorageConfig } from './storage';

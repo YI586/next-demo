@@ -74,7 +74,7 @@ export interface DiagramSnapshot {
 }
 
 /** Diagram operations for undo/redo system */
-export type DiagramOperation = 
+export type DiagramOperation =
   | AddElementOperation
   | UpdateElementOperation
   | DeleteElementOperation

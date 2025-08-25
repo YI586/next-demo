@@ -1,10 +1,14 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with
+code in this repository.
 
 ## Project Overview
 
-This is a simplified Excalidraw MVP - a minimal diagramming application for creating, editing, saving, and loading diagrams composed of sticky notes connected by lines. The architecture emphasizes simplicity and extensibility through an abstract storage layer.
+This is a simplified Excalidraw MVP - a minimal diagramming application for
+creating, editing, saving, and loading diagrams composed of sticky notes
+connected by lines. The architecture emphasizes simplicity and extensibility
+through an abstract storage layer.
 
 ## Technology Stack
 
@@ -81,8 +85,10 @@ pnpm deps:update
 
 ### 2. Element System
 
-- **StickyNote**: Draggable text notes with resizable dimensions and color customization
-- **Connector**: Lines connecting sticky notes with arrow heads and connection points
+- **StickyNote**: Draggable text notes with resizable dimensions and color
+  customization
+- **Connector**: Lines connecting sticky notes with arrow heads and connection
+  points
 
 ### 3. State Management (`src/stores/`)
 

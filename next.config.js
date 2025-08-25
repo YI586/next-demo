@@ -5,14 +5,14 @@ const nextConfig = {
     // Optimize server components
     serverComponentsExternalPackages: [],
   },
-  
+
   // TypeScript configuration
   typescript: {
     // Dangerously allow production builds to successfully complete even if
     // your project has TypeScript errors. Set to false for strict checking
     ignoreBuildErrors: false,
   },
-  
+
   // ESLint configuration
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -21,13 +21,13 @@ const nextConfig = {
     // Specify directories to run ESLint on during builds
     dirs: ['src'],
   },
-  
+
   // Compiler options
   compiler: {
     // Remove console.log in production
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  
+
   // Image optimization
   images: {
     // Configure image domains if needed
@@ -37,11 +37,11 @@ const nextConfig = {
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  
+
   // Output configuration for static export (if needed)
   // output: 'export',
   // trailingSlash: true,
-  
+
   // Headers for security
   async headers() {
     return [
@@ -64,23 +64,23 @@ const nextConfig = {
       },
     ];
   },
-  
+
   // Webpack configuration for additional customization
   webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
     // Custom webpack config modifications can go here
     return config;
   },
-  
+
   // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
-  
+
   // Redirects
   async redirects() {
     return [];
   },
-  
+
   // Rewrites
   async rewrites() {
     return [];

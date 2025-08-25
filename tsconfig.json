@@ -8,18 +8,18 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    
+
     // Modules
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    
+
     // JavaScript Support
     "allowJs": true,
     "checkJs": false,
-    
+
     // Type Checking - Strict Mode Enabled
     "strict": true,
     "noImplicitAny": true,
@@ -37,7 +37,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
-    
+
     // Emit
     "declaration": false,
     "declarationMap": false,
@@ -45,13 +45,13 @@
     "removeComments": false,
     "importHelpers": true,
     "downlevelIteration": true,
-    
+
     // Interop Constraints
     "forceConsistentCasingInFileNames": true,
-    
+
     // Completeness
     "skipDefaultLibCheck": true,
-    
+
     // Path Aliases
     "baseUrl": ".",
     "paths": {
@@ -65,7 +65,7 @@
       "@/styles/*": ["./src/styles/*"],
       "@/app/*": ["./src/app/*"]
     },
-    
+
     // Next.js specific
     "incremental": true,
     "plugins": [
@@ -74,19 +74,8 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "out",
-    "dist",
-    "build"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next", "out", "dist", "build"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

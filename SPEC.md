@@ -2,17 +2,21 @@
 
 ## Overview
 
-A minimal diagramming application that allows users to create, edit, save, and load diagrams composed of sticky notes connected by lines. The system emphasizes simplicity and extensibility through an abstract storage layer.
+A minimal diagramming application that allows users to create, edit, save, and
+load diagrams composed of sticky notes connected by lines. The system emphasizes
+simplicity and extensibility through an abstract storage layer.
 
 ## Core Features
 
 ### 1. Canvas System
+
 - **Infinite canvas** with pan and zoom capabilities
 - **Grid or dot background** for visual guidance
 - **Viewport management** to handle coordinate transformations
 - **Mouse/touch interaction** for element manipulation
 
 ### 2. Sticky Notes
+
 - **Basic text notes** with editable content
 - **Draggable positioning** on the canvas
 - **Resizable dimensions** (width/height)
@@ -21,6 +25,7 @@ A minimal diagramming application that allows users to create, edit, save, and l
 - **Selection states** (selected, hover, normal)
 
 ### 3. Connectors
+
 - **Line connections** between sticky notes
 - **Connection points** on note edges (top, right, bottom, left)
 - **Visual indicators** for connection points when dragging
@@ -28,6 +33,7 @@ A minimal diagramming application that allows users to create, edit, save, and l
 - **Automatic routing** around obstacles (simple straight lines for MVP)
 
 ### 4. Canvas Operations
+
 - **Create elements** (sticky notes)
 - **Select/multi-select** elements
 - **Move elements** via drag and drop
@@ -36,6 +42,7 @@ A minimal diagramming application that allows users to create, edit, save, and l
 - **Undo/redo** basic operations
 
 ### 5. File Operations
+
 - **Save diagram** to file (JSON format)
 - **Load diagram** from file
 - **New diagram** (clear canvas)
@@ -45,6 +52,7 @@ A minimal diagramming application that allows users to create, edit, save, and l
 ### Core Components
 
 #### 1. Canvas Engine
+
 ```typescript
 interface CanvasEngine {
   render(): void;
@@ -56,6 +64,7 @@ interface CanvasEngine {
 ```
 
 #### 2. Element System
+
 ```typescript
 interface Element {
   id: string;
@@ -85,6 +94,7 @@ type ConnectionPoint = 'top' | 'right' | 'bottom' | 'left';
 ```
 
 #### 3. Diagram Model
+
 ```typescript
 interface Diagram {
   id: string;
@@ -101,6 +111,7 @@ interface Diagram {
 ```
 
 #### 4. Abstract Storage Interface
+
 ```typescript
 interface StorageAdapter {
   save(diagram: Diagram): Promise<void>;
@@ -118,16 +129,17 @@ interface DiagramMetadata {
 ```
 
 #### 5. File Storage Implementation
+
 ```typescript
 class FileStorageAdapter implements StorageAdapter {
   async save(diagram: Diagram): Promise<void> {
     // Save to JSON file via browser download
   }
-  
+
   async load(id: string): Promise<Diagram> {
     // Load from JSON file via file input
   }
-  
+
   // For MVP, list/delete may use localStorage for metadata
 }
 ```
@@ -135,17 +147,20 @@ class FileStorageAdapter implements StorageAdapter {
 ## User Interface Requirements
 
 ### Canvas Area
+
 - **Full-screen canvas** taking up majority of viewport
 - **Toolbar** with essential tools (select, create note, delete)
 - **Color picker** for sticky note background colors
 - **Zoom controls** (zoom in, zoom out, fit to screen)
 
 ### File Operations UI
+
 - **Save button** - triggers file download
 - **Load button** - opens file picker
 - **New button** - clears canvas with confirmation
 
 ### Interactive Behaviors
+
 - **Click empty canvas** - deselect all
 - **Click element** - select single element
 - **Ctrl+click element** - multi-select
@@ -156,6 +171,7 @@ class FileStorageAdapter implements StorageAdapter {
 ## Data Persistence
 
 ### File Format (JSON)
+
 ```json
 {
   "id": "diagram-uuid",
@@ -197,6 +213,7 @@ class FileStorageAdapter implements StorageAdapter {
 ## Technology Stack
 
 ### Framework & Core
+
 - **Next.js 14+** with App Router for React framework
 - **TypeScript** for type safety and better developer experience
 - **shadcn/ui** for consistent UI components and design system
@@ -204,14 +221,17 @@ class FileStorageAdapter implements StorageAdapter {
 - **Canvas API** for high-performance diagram rendering
 
 ### Package Management & Build Tools
+
 - **pnpm** for fast, efficient package management
 - **Turbo** (optional) for build optimization and caching
 
 ### State Management
+
 - **Zustand** with TypeScript for lightweight state management
 - **Immer** for immutable state updates
 
 ### Development Tooling
+
 - **ESLint** with Next.js and TypeScript configurations
 - **Prettier** for code formatting
 - **TypeScript strict mode** with comprehensive type checking
@@ -220,12 +240,14 @@ class FileStorageAdapter implements StorageAdapter {
 - **commitlint** for conventional commit messages
 
 ### Code Quality & Testing
+
 - **@typescript-eslint/parser** and rules
 - **eslint-plugin-react-hooks** for React best practices
 - **@next/eslint-config-next** for Next.js specific rules
 - **npm-check-updates** for dependency management
 
 ### Utilities
+
 - **uuid** for generating unique element IDs
 - **lodash-es** for utility functions (tree-shakeable)
 - **clsx** and **tailwind-merge** for conditional classes (comes with shadcn/ui)
@@ -233,6 +255,7 @@ class FileStorageAdapter implements StorageAdapter {
 ## Project Setup & Configuration
 
 ### Package.json Scripts
+
 ```json
 {
   "scripts": {
@@ -252,6 +275,7 @@ class FileStorageAdapter implements StorageAdapter {
 ```
 
 ### ESLint Configuration (.eslintrc.json)
+
 ```json
 {
   "extends": [
@@ -275,6 +299,7 @@ class FileStorageAdapter implements StorageAdapter {
 ```
 
 ### TypeScript Configuration (tsconfig.json)
+
 ```json
 {
   "compilerOptions": {
@@ -310,6 +335,7 @@ class FileStorageAdapter implements StorageAdapter {
 ```
 
 ### Prettier Configuration (.prettierrc)
+
 ```json
 {
   "semi": true,
@@ -325,6 +351,7 @@ class FileStorageAdapter implements StorageAdapter {
 ```
 
 ### Husky Pre-commit Hooks (.husky/pre-commit)
+
 ```bash
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
@@ -334,32 +361,42 @@ pnpm type-check
 ```
 
 ### Lint-staged Configuration (.lintstagedrc.json)
+
 ```json
 {
-  "*.{ts,tsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ],
-  "*.{json,md,css}": [
-    "prettier --write"
-  ]
+  "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,md,css}": ["prettier --write"]
 }
 ```
 
 ### Commitlint Configuration (.commitlintrc.json)
+
 ```json
 {
   "extends": ["@commitlint/config-conventional"],
   "rules": {
-    "type-enum": [2, "always", [
-      "feat", "fix", "docs", "style", "refactor", 
-      "perf", "test", "chore", "ci", "build"
-    ]]
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "chore",
+        "ci",
+        "build"
+      ]
+    ]
   }
 }
 ```
 
 ### Development Dependencies
+
 ```json
 {
   "devDependencies": {
@@ -428,6 +465,7 @@ src/
 ## Installation & Setup Commands
 
 ### Initial Project Setup
+
 ```bash
 # Create Next.js project with TypeScript
 pnpm create next-app@latest excalidraw-mvp --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
@@ -451,6 +489,7 @@ pnpm prepare
 ```
 
 ### Development Workflow Commands
+
 ```bash
 # Start development server
 pnpm dev
@@ -477,13 +516,15 @@ pnpm lint-staged
 ## Implementation Phases
 
 ### Phase 1: Project Setup & Foundation
+
 1. **Initialize Next.js project** with all modern tooling
 2. **Configure shadcn/ui** and basic component structure
 3. **Set up state management** with Zustand stores
 4. **Implement basic canvas** rendering and viewport management
 5. **Add development workflow** (linting, pre-commit hooks, type checking)
 
-### Phase 2: Core Canvas Functionality  
+### Phase 2: Core Canvas Functionality
+
 1. **Canvas engine implementation** with pan/zoom
 2. **Sticky note creation** and basic text editing
 3. **Element selection system** with multi-select support
@@ -491,6 +532,7 @@ pnpm lint-staged
 5. **Toolbar integration** using shadcn/ui components
 
 ### Phase 3: Connections & Advanced Interactions
+
 1. **Connection points** on sticky notes
 2. **Connector creation** via drag and drop
 3. **Visual connection feedback** during creation
@@ -498,6 +540,7 @@ pnpm lint-staged
 5. **Keyboard shortcuts** for power users
 
 ### Phase 4: Persistence & File Operations
+
 1. **Abstract storage interface** implementation
 2. **File-based storage adapter** with JSON format
 3. **Save/Load dialogs** using shadcn/ui
@@ -507,6 +550,7 @@ pnpm lint-staged
 ## Future Extensibility
 
 The abstract storage interface enables future implementations:
+
 - **Database Storage Adapter** - for cloud persistence
 - **Local Storage Adapter** - for browser-based persistence
 - **API Storage Adapter** - for server-based storage with collaboration features
@@ -514,7 +558,8 @@ The abstract storage interface enables future implementations:
 ## Performance Considerations
 
 - **Virtualization** - Only render elements in viewport (for large diagrams)
-- **Event delegation** - Use canvas-level event handling rather than per-element listeners
+- **Event delegation** - Use canvas-level event handling rather than per-element
+  listeners
 - **Throttled updates** - Debounce rapid position updates during dragging
 - **Efficient re-renders** - Only re-render changed elements
 

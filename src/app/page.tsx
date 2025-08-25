@@ -6,7 +6,8 @@ export default function HomePage() {
           Welcome to Next Demo
         </h1>
         <p className="mb-8 text-lg text-muted-foreground">
-          A minimal diagramming application for creating, editing, saving, and loading diagrams composed of sticky notes connected by lines.
+          A minimal diagramming application for creating, editing, saving, and loading diagrams
+          composed of sticky notes connected by lines.
         </p>
         <div className="rounded-lg border bg-card p-6 text-card-foreground">
           <h2 className="mb-4 text-xl font-semibold">Features</h2>
