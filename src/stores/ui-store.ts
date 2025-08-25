@@ -17,8 +17,8 @@ import {
   type Notification,
   type NotificationAction,
   type DiagramElement,
-  DialogType,
-  SidebarTab,
+  type DialogType,
+  type SidebarTab,
 } from '@/types';
 import { LoadingState as LoadingStates, Tool as Tools } from '@/types/common';
 
@@ -160,13 +160,13 @@ const initialState: UIState = {
   },
   dialog: {
     open: false,
-    type: DialogType.NEW_DIAGRAM,
+    type: 'new_diagram' as DialogType,
   },
   loading: {},
   notifications: [],
   sidebar: {
     visible: true,
-    activeTab: SidebarTab.PROPERTIES,
+    activeTab: 'properties' as SidebarTab,
     width: 300,
   },
   toolbar: {
@@ -338,7 +338,7 @@ export const useUIStore = create<UIStore>()(
       set((state) => {
         state.contextMenu.visible = true;
         state.contextMenu.position = { ...position };
-        state.contextMenu.target = target;
+        state.contextMenu.target = target as any;
 
         if (items) {
           state.contextMenu.items = items;
@@ -351,7 +351,7 @@ export const useUIStore = create<UIStore>()(
     hideContextMenu: () => {
       set((state) => {
         state.contextMenu.visible = false;
-        state.contextMenu.target = undefined;
+        state.contextMenu.target = undefined as any;
       });
     },
 
@@ -419,9 +419,9 @@ export const useUIStore = create<UIStore>()(
           type,
           title,
           message,
-          duration: options.duration,
+          duration: options.duration || 5000,
           persistent: options.persistent || false,
-          actions: options.actions,
+          actions: options.actions || [],
           createdAt: now,
         };
 

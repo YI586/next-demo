@@ -1,7 +1,8 @@
 /**
- * Canvas utilities and viewport management exports
+ * Canvas utilities, viewport management, and event handling exports
  */
 
+// Viewport management
 export {
   ViewportManager,
   createViewportManager,
@@ -16,3 +17,33 @@ export type {
   ZoomResult,
   PanResult,
 } from './viewport';
+
+// Event handling system
+export {
+  CanvasEventManager,
+  EventProcessor,
+  HitTester,
+  GestureRecognizer,
+  EventDelegator,
+} from './events';
+
+export type {
+  CanvasEventHandler,
+  EventListenerMap,
+  EventHandlerOptions,
+  ProcessedCanvasEvent,
+  TouchGesture,
+  GestureState,
+  HitTestOptions,
+  EventDelegationOptions,
+  EventManagerConfig,
+  EventMetrics,
+  EventSystemState,
+} from './events';
+
+export {
+  EventType,
+  GestureType,
+  InteractionState,
+  HitTestLayer,
+} from './events';

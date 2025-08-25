@@ -44,7 +44,7 @@ export class StorageManager {
   private adapters = new Map<string, StorageAdapter>();
   private defaultAdapterName = '';
   private eventListeners = new Map<keyof StorageManagerEvents, Set<StorageEventCallback>>();
-  private operationId = 0;
+  private _operationId = 0;
 
   constructor(private config: Partial<StorageConfig> = {}) {
     this.setupDefaultConfig();
